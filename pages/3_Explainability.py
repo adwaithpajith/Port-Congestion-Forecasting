@@ -109,13 +109,21 @@ with tab2:
     queue_val = shap_features.iloc[idx].get("queue_lag_1h", "—")
     st.caption(f"Sample {idx} — current queue (lag 1h): {queue_val:.0f} vessels")
 
+    # explainer.expected_value can be a plain float, a numpy scalar, or a
+    # 1-element array/list depending on the installed SHAP/XGBoost version —
+    # shap.waterfall_plot requires a clean scalar, so normalize it here.
+    expected_value = explainer.expected_value
+    if isinstance(expected_value, (list, tuple, np.ndarray)):
+        expected_value = np.asarray(expected_value).flatten()[0]
+    expected_value = float(expected_value)
+
     fig3, ax3 = plt.subplots(figsize=(10, 5))
     fig3.patch.set_facecolor("#0E1117")
     ax3.set_facecolor("#0E1117")
     shap.waterfall_plot(
         shap.Explanation(
             values=shap_values[idx],
-            base_values=explainer.expected_value,
+            base_values=expected_value,
             data=shap_features.iloc[idx].values,
             feature_names=feature_cols,
         ),
