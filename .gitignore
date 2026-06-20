@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.venv
+venv/
+*.log
+.DS_Store
+
+# Raw AIS downloads — too large for GitHub
+data/raw/
+*.zip
+*.csv.gz
+
+# Keep processed data and models
+!data/congestion_features.csv
+!data/wait_times.csv
+!models/xgb_port_congestion.json
+!models/explainer.pkl
+!models/feature_cols.json
